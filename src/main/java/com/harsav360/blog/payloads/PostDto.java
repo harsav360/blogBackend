@@ -2,11 +2,7 @@ package com.harsav360.blog.payloads;
 
 import java.util.Date;
 
-import com.harsav360.blog.entities.Category;
-import com.harsav360.blog.entities.User;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PostDto {
+	
+	private Integer postId;
 
 	private String title;
 	private String content;
