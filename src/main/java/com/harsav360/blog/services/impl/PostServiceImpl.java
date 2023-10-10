@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.harsav360.blog.entities.Category;
@@ -13,6 +16,7 @@ import com.harsav360.blog.entities.Post;
 import com.harsav360.blog.entities.User;
 import com.harsav360.blog.exceptions.ResourceNotFoundException;
 import com.harsav360.blog.payloads.PostDto;
+import com.harsav360.blog.payloads.PostResponse;
 import com.harsav360.blog.repositories.CategoryRepo;
 import com.harsav360.blog.repositories.PostRepo;
 import com.harsav360.blog.repositories.UserRepo;
@@ -77,12 +81,24 @@ public class PostServiceImpl implements PostService {
 	// Getting All Post
 
 	@Override
-	public List<PostDto> getAllPost() {
-		List<Post> posts = this.postRepo.findAll();
+	public PostResponse getAllPost(Integer pageNumber,Integer pageSize) {
 		
-        List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+		Pageable p = PageRequest.of(pageNumber, pageSize);
+		Page<Post> pagePost = this.postRepo.findAll(p);
 		
-		return postDtos;
+		List<Post> allPosts = pagePost.getContent();
+		
+        List<PostDto> postDtos = allPosts.stream().map((post) -> this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+        
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+		
+		return postResponse;
 	}
 	
 	// Getting a Post by ID

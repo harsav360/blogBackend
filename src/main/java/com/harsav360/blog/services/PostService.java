@@ -3,6 +3,7 @@ package com.harsav360.blog.services;
 import java.util.List;
 
 import com.harsav360.blog.payloads.PostDto;
+import com.harsav360.blog.payloads.PostResponse;
 
 public interface PostService {
 	
@@ -16,7 +17,7 @@ public interface PostService {
 	void deletePost(Integer postId);
 	
 	// Get All Posts
-	List<PostDto> getAllPost();
+	PostResponse getAllPost(Integer pageNumber,Integer pageSize);
 	
 	// Get Post By ID
 	PostDto getPostById(Integer postId);
